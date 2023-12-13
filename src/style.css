@@ -95,3 +95,8 @@ td {
 #teamsTable tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
+#teamsTable input:not([type="image" i]) {
+  width: 100%;
+  box-sizing: border-box;
+}
