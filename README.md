@@ -6,11 +6,11 @@ In Current Demo you'll see some of projects created by my students. You can also
 
 ## 💠 Features & Usage
 
-- [x]Teams Networking (CRUD\*) Operations
-  - [x] Create
-  - [x] Read
-  - [ ] Update
-  - [ ] Delete
+- [x] Teams Networking (CRUD\*) Operations
+  - [x] **C**reate
+  - [x] **R**ead
+  - [ ] **U**pdate
+  - [ ] **D**elete
 - [ ] Search
 - [ ] Loading mask
 
