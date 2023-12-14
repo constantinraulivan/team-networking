@@ -1,5 +1,8 @@
 import "./style.css";
 
+let editId;
+let allTeams = [];
+
 function $(selector) {
   return document.querySelector(selector);
 }
@@ -23,6 +26,17 @@ function deleteTeamRequest(id) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ id: id })
+  }).then(r => r.json());
+}
+
+function updateTeamRequest(team) {
+  // PUT teams-json/update
+  return fetch("http://localhost:3000/teams-json/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(team)
   }).then(r => r.json());
 }
 
@@ -52,6 +66,7 @@ function loadTeams() {
   })
     .then(response => response.json())
     .then(teams => {
+      allTeams = teams;
       renderTeams(teams);
     });
 }
@@ -59,23 +74,49 @@ function loadTeams() {
 function onSubmit(e) {
   e.preventDefault();
 
+  const team = getTeamValues();
+
+  if (editId) {
+    team.id = editId;
+    updateTeamRequest(team).then(status => {
+      if (status.success) {
+        window.location.reload();
+      }
+    });
+  } else {
+    createTeamRequest(team).then(status => {
+      if (status.success) {
+        window.location.reload();
+      }
+    });
+  }
+}
+
+function startEdit(id) {
+  editId = id;
+  const team = allTeams.find(team => team.id === id);
+  setTeamValues(team);
+}
+
+function setTeamValues(team) {
+  $("input[name=promotion]").value = team.promotion;
+  $("input[name=members]").value = team.members;
+  $("input[name=name]").value = team.name;
+  $("input[name=url]").value = team.url;
+}
+
+function getTeamValues() {
   const members = $("input[name=members]").value;
   const promotion = $("input[name=promotion]").value;
-  const projectname = $("input[name=projectname]").value;
+  const name = $("input[name=name]").value;
   const url = $("input[name=url]").value;
 
-  const team = {
+  return {
     promotion,
     members,
-    name: projectname,
-    url: url
+    name,
+    url
   };
-
-  createTeamRequest(team).then(status => {
-    if (status.success) {
-      window.location.reload();
-    }
-  });
 }
 
 function initEvents() {
@@ -89,6 +130,9 @@ function initEvents() {
           window.location.reload();
         }
       });
+    } else if (e.target.matches("button.edit-btn")) {
+      const id = e.target.dataset.id;
+      startEdit(id);
     }
   });
 }
