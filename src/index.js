@@ -59,7 +59,23 @@ function getTeamAsHTML(team) {
 </tr>`;
 }
 
+function areTeamsEquals(renderedTeams, teams) {
+  if (renderedTeams === teams) {
+    return true;
+  }
+  if (renderedTeams.length === teams.length) {
+    const eq = renderedTeams.every((team, index) => team === teams[index]);
+    if (eq) {
+      return true;
+    }
+  }
+  return false;
+}
+
+let renderedTeams = [];
 function renderTeams(teams) {
+  if (areTeamsEquals(renderedTeams, teams)) return;
+  renderedTeams = teams;
   const teamsHTML = teams.map(getTeamAsHTML);
 
   $("#teamsTable tbody").innerHTML = teamsHTML.join("");
@@ -74,7 +90,6 @@ function loadTeams() {
     .then(teams => {
       allTeams = teams;
       renderTeams(teams);
-      console.timeEnd("app-ready");
     });
 }
 
