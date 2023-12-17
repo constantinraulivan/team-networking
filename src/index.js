@@ -70,7 +70,6 @@ function areTeamsEquals(renderedTeams, teams) {
   if (renderedTeams.length === teams.length) {
     const eq = renderedTeams.every((team, i) => team === teams[i]);
     if (eq) {
-      console.info("same content in different arrays");
       return true;
     }
   }
@@ -87,19 +86,15 @@ function renderTeams(teams) {
   // console.timeEnd("eq-check");
 
   renderedTeams = teams;
-  console.time("render");
   const teamsHTML = teams.map(getTeamAsHTML);
 
   $("#teamsTable tbody").innerHTML = teamsHTML.join("");
-  console.timeEnd("render");
 }
 
-function loadTeams() {
-  loadTeamsRequest().then(teams => {
-    allTeams = teams;
-    renderTeams(teams);
-    console.timeEnd("app-ready");
-  });
+async function loadTeams() {
+  const teams = await loadTeamsRequest();
+  allTeams = teams;
+  renderTeams(teams);
 }
 
 function updateTeam(teams, team) {
@@ -216,4 +211,9 @@ function initEvents() {
 }
 
 initEvents();
-loadTeams();
+loadTeams().then(() => {
+  console.warn("App-ready");
+});
+// - this code blockes the main thread
+// await loadTeams();
+// console.timeEnd("App-ready")
