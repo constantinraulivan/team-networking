@@ -93,6 +93,18 @@ function loadTeams() {
     });
 }
 
+function updateTeam(teams, team) {
+  return teams.map(t => {
+    if (t.id === team.id) {
+      return {
+        ...t,
+        ...team
+      };
+    }
+    return t;
+  });
+}
+
 function onSubmit(e) {
   e.preventDefault();
 
@@ -102,7 +114,9 @@ function onSubmit(e) {
     team.id = editId;
     updateTeamRequest(team).then(status => {
       if (status.success) {
-        window.location.reload();
+        allTeams = updateTeam(allTeams, team);
+        renderTeams(allTeams);
+        $("#teamsForm").reset();
       }
     });
   } else {
