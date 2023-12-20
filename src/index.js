@@ -1,6 +1,7 @@
 // import { debounce } from "lodash"; // imports too much code
 import debounce from "lodash/debounce"; // improved import
 import "./style.css";
+import "./loading-mask.css";
 import { $ } from "./utilities";
 import { loadTeamsRequest, createTeamRequest, deleteTeamRequest, updateTeamRequest } from "./middleware";
 
@@ -173,9 +174,12 @@ function initEvents() {
   });
 }
 
+$("#teamsForm").classList.add("loading-mask");
+
 initEvents();
 loadTeams().then(() => {
   console.warn("App-ready");
+  $("#teamsForm").classList.remove("loading-mask");
 });
 // - this code blockes the main thread
 // await loadTeams();
